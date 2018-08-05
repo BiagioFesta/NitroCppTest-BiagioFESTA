@@ -1,0 +1,35 @@
+language: cpp
+os: linux
+dist: trusty
+sudo: required
+compiler: gcc
+
+env:
+  - BUILD_TYPE=Debug
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get install -qq --allow-unauthenticated g++-8 libgtest-dev cmake
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - git clone https://github.com/google/googletest.git
+  - cd googletest
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+  - make
+  - sudo make install
+
+script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build
+  - cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_TEST=YES
+  - cmake --build .
+  - ctest
+

@@ -1,0 +1,5 @@
+# Emacs Env
+.cquery_cached_index/
+.projectile
+build/
+compile_commands.json
